@@ -1,19 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Load articles from JSON file
     fetch('Articles.json')
         .then(response => response.json())
         .then(data => {
             const articles = data.articles;
             
-            // Initialize the dashboard
             initDashboard(articles);
             
-            // Set up event listeners
             document.getElementById('sortSelect').addEventListener('change', () => {
                 displayArticles(articles);
             });
             
-            // Set up theme toggle
             const themeToggle = document.getElementById('themeToggle');
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-bs-theme', savedTheme);
@@ -29,13 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initDashboard(articles) {
-    // Display all articles
     displayArticles(articles);
     
-    // Display most popular article
     displayMostPopular(articles);
     
-    // Populate categories
     populateCategories(articles);
 }
 
@@ -43,10 +36,8 @@ function displayArticles(articles) {
     const sortBy = document.getElementById('sortSelect').value;
     const articlesGrid = document.getElementById('articlesGrid');
     
-    // Clear existing articles
     articlesGrid.innerHTML = '';
     
-    // Sort articles
     const sortedArticles = [...articles].sort((a, b) => {
         if (sortBy === 'views') {
             return b.views - a.views;
@@ -55,7 +46,6 @@ function displayArticles(articles) {
         }
     });
     
-    // Display each article
     sortedArticles.forEach(article => {
         const articleElement = createArticleCard(article);
         articlesGrid.appendChild(articleElement);
@@ -82,7 +72,6 @@ function createArticleCard(article) {
     
     card.addEventListener('click', () => {
         showArticleModal(article);
-        // Increment views (in a real app, this would be saved to a database)
         article.views++;
         displayMostPopular(articles);
     });
@@ -120,12 +109,10 @@ function populateCategories(articles) {
         categoryList.appendChild(li);
     });
     
-    // Add click event to category links
     document.querySelectorAll('#categoryList .nav-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             
-            // Set active class
             document.querySelectorAll('#categoryList .nav-link').forEach(el => el.classList.remove('active'));
             link.classList.add('active');
             
@@ -177,5 +164,4 @@ function calculateReadingTime(wordCount) {
     return Math.ceil(wordCount / wordsPerMinute);
 }
 
-// Make functions available globally for inline event handlers
 window.showArticleModal = showArticleModal;
